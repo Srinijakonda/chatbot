@@ -1,0 +1,85 @@
+import random
+import nltk
+
+# Download the necessary NLTK data files
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+# Define some basic responses
+RESPONSES = {
+    "hello": ["Hi!", "Hello!", "Hey there!"],
+    "how are you": ["I'm just a bot, but I'm functioning well. Thanks for asking!", "I'm a bot, so I don't have feelings, but I'm here to help you!"],
+    "bye": ["Goodbye!", "See you later!", "Have a great day!"],
+    "thanks": ["You're welcome!", "My pleasure!", "No problem!"],
+    "what's your name": ["I'm a simple chatbot, I don't have a name."],
+    "default": ["I'm sorry, I didn't understand that.", "Can you please rephrase that?"]
+}
+
+# Define some basic questions to ask
+QUESTIONS = ["Do you like to travel?", "What's your favorite color?", "Have you ever been to the beach?"]
+
+# Define a function to process the user's input
+def process_input(input_text):
+    # Tokenize the input into words
+    words = nltk.word_tokenize(input_text)
+
+    # Remove stopwords
+    words = [word for word in words if word.lower() not in nltk.corpus.stopwords.words('english')]
+
+    # Part of speech tagging
+    pos_tags = nltk.pos_tag(words)
+
+    # Lemmatize the words
+    lemmas = [nltk.WordNetLemmatizer().lemmatize(word) for word, tag in pos_tags]
+
+    # Join the lemmas back into a string
+    input_text = ' '.join(lemmas)
+
+    return input_text
+
+# Define a function to generate a response
+def generate_response(input_text):
+    # Process the user's input
+    input_text = process_input(input_text)
+
+    # Initialize the response
+    response = RESPONSES.get('default')
+
+    # Check if the user's input matches any of the defined questions
+    for question in QUESTIONS:
+        if question in input_text:
+            response = random.choice(RESPONSES.get('default'))
+            break
+
+    # Check if the user's input matches any of the defined responses
+    for key, values in RESPONSES.items():
+        if key in input_text:
+            response = random.choice(values)
+            break
+
+    return response
+
+# Define a function to ask the user a question
+def ask_question():
+    question = random.choice(QUESTIONS)
+    return question
+
+# Define a function to run the chatbot
+def run_chatbot():
+    print("Hi, I'm a simple chatbot!")
+    while True:
+        user_input = input("You: ").lower()
+        if user_input == 'bye':
+            print(generate_response('bye'))
+            break
+        elif user_input == 'thanks':
+            print(generate_response('thanks'))
+            continue
+        else:
+            print(generate_response(user_input))
+            if random.random() < 0.5:
+                print(ask_question())
+
+# Run the chatbot
+run_chatbot()
