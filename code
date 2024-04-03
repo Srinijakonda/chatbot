@@ -1,5 +1,8 @@
 import random
 import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 RESPONSES = {
     "hello": ["Hi!", "Hello!", "Hey there!"],
     "how are you": ["I'm just a bot, but I'm functioning well. Thanks for asking!", "I'm a bot, so I don't have feelings, but I'm here to help you!"],
